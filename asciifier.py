@@ -4,6 +4,7 @@ import math
 import numpy as np
 from cv2 import cv2
 from PIL import Image, ImageDraw, ImageFont, ImageStat
+import unicodedata
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate an ASCII art file using text input or image input.')
@@ -11,7 +12,7 @@ if __name__ == "__main__":
     input_group.add_argument('-i', '--image', help='Any type of Image that cv2 supports')
     input_group.add_argument('-t', '--text', help='Some text')
     parser.add_argument('-f', '--font', help='Font for the text to be used for display. Calculation always uses FiraCode-Medium')
-    parser.add_argument('-c', '--charset', help='Character set text file, UTF-8')
+    parser.add_argument('-c', '--charset', help='Character set text file, UTF-8, Ignores full-width chars')
     parser.add_argument('height', help='Output height in number of lines', nargs='?', default=None)
     parser.add_argument('width', help='Output width in number of characters', nargs='?', default=None)
     parser.add_argument('-o', '--output', help='Output file name', required=True)
@@ -27,6 +28,7 @@ if __name__ == "__main__":
         
         # 0 = grayscale
         im = cv2.imread(args.image, 0)
+        im = cv2.bitwise_not(im)
         
         if im is None:
             print('Image not found.')
@@ -104,6 +106,7 @@ if __name__ == "__main__":
         try:
             with open(args.charset, mode='r', encoding='utf-8') as f:
                 charset = f.read()
+                charset = unicodedata.normalize('NFKC', charset)
         except Exception as e:
             pass
  
@@ -113,6 +116,9 @@ if __name__ == "__main__":
  
     data = []
     for char in charset:
+        char_width = unicodedata.east_asian_width(char)
+        if char_width in ['F', 'W', 'A']:
+            continue
         canvas = ImageDraw.Draw(letter_image)
         canvas.text((0, 0), char, 0, font)
         data.append({
