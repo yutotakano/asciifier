@@ -42,6 +42,7 @@ if __name__ == "__main__":
         if args.height is None:
             parser.error('Missing argument <height> for font')
 
+        # Currently this generates a longer image than necessary, so perhaps add an algo later to detect end of the word and crop
         im = Image.new('L', (len(args.text)*int(args.height)*matrix_size, int(args.height)*matrix_size), 255)
         font = ImageFont.truetype(args.font, int(args.height)*matrix_size - 2)
         context = ImageDraw.Draw(im)
