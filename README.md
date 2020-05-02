@@ -12,9 +12,9 @@ A frequently used method of generating ascii text art from an image involves the
 2. Turn main image black-and-white and resize image to output height/width
 3. For each pixel in image, find the closest blackness match in the map of characters
 
-This method has its drawbacks in that it cannot distinguish between two characters that have the same mean color. For example, ▌ and ▐ have the same mean colour, yet they are vertical half blocks placed on the opposite sides (U+258C and U+2590). This leads to unexpected "blocky-ness" in the output, which could been smoothed out with the proper use of a content-aware algorithm that chooses the characters.
+This method has its drawbacks in that it cannot distinguish between two characters that have the same mean color. For example, ▌ and ▐ have the same mean colour, yet they are vertical half blocks placed on the opposite sides (U+258C and U+2590). This leads to unexpected "blocky-ness" in the output, which could have been smoothed out with the proper use of a content-aware algorithm that chooses the characters.
 
-In Asciifier, this is achieved through sampling numerous positions within the rectangle that represents one output character. By default, the matrix size is 5, which means blackness values from 5x5=25 points are stored as a matrix. By mathematically comparing this matrix to the map of matrices for all possible characters, the precision and accuracy of choosing appropriate characters increases significantly compared to the old method. As a result, a smoother text art that accurately reflects the original image is generated.
+In Asciifier, this problem is solved through sampling numerous positions within the rectangle that represents one output character. By default, the matrix size is 5, which means blackness values from 5x5=25 points are stored as a matrix. By mathematically comparing this matrix to the map of matrices for all possible characters, the precision and accuracy of choosing appropriate characters increases significantly compared to the old method. As a result, a smoother text art that accurately reflects the original image is generated.
 
 ## Usage
 
@@ -49,4 +49,4 @@ arguments:
 
 `python3 asciifier.py -t "Hello :)" --font "~/path/to/font.ttf" --height 20 -o output.txt`
 
-⇒ Creates an image of height 20, writes the input text with the specified font, then uses that temporary image to generate art.
+⇒ Creates an image of height 20 (and dynamic width), writes the input text with the specified font, then uses that temporary image to generate art.
